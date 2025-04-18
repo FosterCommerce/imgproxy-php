@@ -7,7 +7,7 @@ class Options implements \Stringable
 	/**
 	 * Stores all set options and their values
 	 *
-	 * @var array<string, mixed>
+	 * @var array<string, array<array-key, mixed>>
 	 */
 	protected array $options = [];
 
@@ -50,11 +50,7 @@ class Options implements \Stringable
 		$parts = [];
 
 		foreach ($this->options as $option => $values) {
-			if (is_array($values)) {
-				$values = implode($this->argumentsSeparator, array_map(fn ($value): string => $this->formatValue($value), $values));
-			} else {
-				$values = $this->formatValue($values);
-			}
+			$values = implode($this->argumentsSeparator, array_map(fn ($value): string => $this->formatValue($value), $values));
 
 			$parts[] = $option . ($values !== '' ? $this->argumentsSeparator . $values : '');
 		}
@@ -74,12 +70,34 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get resizing type
+	 */
+	public function getResizingType(): ?string
+	{
+		/** @var ?string $value */
+		$value = $this->options['resizing_type'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set width
 	 */
 	public function setWidth(int $width): self
 	{
 		$this->options['width'] = [$width];
 		return $this;
+	}
+
+	/**
+	 * Get width
+	 */
+	public function getWidth(): ?int
+	{
+		/** @var ?int $value */
+		$value = $this->options['width'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -92,12 +110,34 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get height
+	 */
+	public function getHeight(): ?int
+	{
+		/** @var ?int $value */
+		$value = $this->options['height'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set min width
 	 */
 	public function setMinWidth(int $width): self
 	{
 		$this->options['min-width'] = [$width];
 		return $this;
+	}
+
+	/**
+	 * Get min width
+	 */
+	public function getMinWidth(): ?int
+	{
+		/** @var ?int $value */
+		$value = $this->options['min-width'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -110,6 +150,17 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get min height
+	 */
+	public function getMinHeight(): ?int
+	{
+		/** @var ?int $value */
+		$value = $this->options['min-height'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set zoom
 	 *
 	 * @param float|array<int, float> $zoom Either single value for both dimensions or [x, y]
@@ -117,8 +168,20 @@ class Options implements \Stringable
 	public function setZoom($zoom): self
 	{
 		$this->options['zoom'] = is_array($zoom) ? $zoom : [$zoom];
-
 		return $this;
+	}
+
+	/**
+	 * Get zoom
+	 *
+	 * @return float|array<int, float>|null
+	 */
+	public function getZoom(): float|array|null
+	{
+		/** @var float|array<int, float>|null $value */
+		$value = $this->options['zoom'] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -131,12 +194,34 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get DPR (device pixel ratio)
+	 */
+	public function getDpr(): ?float
+	{
+		/** @var ?float $value */
+		$value = $this->options['dpr'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set enlarge
 	 */
 	public function setEnlarge(bool $enlarge): self
 	{
 		$this->options['enlarge'] = [$enlarge];
 		return $this;
+	}
+
+	/**
+	 * Get enlarge
+	 */
+	public function getEnlarge(): ?bool
+	{
+		/** @var ?bool $value */
+		$value = $this->options['enlarge'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -154,6 +239,16 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get extend
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getExtend(): ?array
+	{
+		return $this->options['extend'] ?? null;
+	}
+
+	/**
 	 * Set extend aspect ratio
 	 */
 	public function setExtendAspectRatio(bool $extend, ?string $gravity = null): self
@@ -165,6 +260,16 @@ class Options implements \Stringable
 
 		$this->options['extend_aspect_ratio'] = $values;
 		return $this;
+	}
+
+	/**
+	 * Get extend aspect ratio
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getExtendAspectRatio(): ?array
+	{
+		return $this->options['extend_aspect_ratio'] ?? null;
 	}
 
 	/**
@@ -186,6 +291,16 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get gravity
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getGravity(): ?array
+	{
+		return $this->options['gravity'] ?? null;
+	}
+
+	/**
 	 * Set crop
 	 */
 	public function setCrop(int $width, int $height, ?int $x = null, ?int $y = null): self
@@ -201,6 +316,16 @@ class Options implements \Stringable
 
 		$this->options['crop'] = $values;
 		return $this;
+	}
+
+	/**
+	 * Get crop
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getCrop(): ?array
+	{
+		return $this->options['crop'] ?? null;
 	}
 
 	/**
@@ -223,6 +348,16 @@ class Options implements \Stringable
 
 		$this->options['padding'] = $values;
 		return $this;
+	}
+
+	/**
+	 * Get padding
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getPadding(): ?array
+	{
+		return $this->options['padding'] ?? null;
 	}
 
 	/**
@@ -250,12 +385,33 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get trim
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getTrim(): ?array
+	{
+		return $this->options['trim'] ?? null;
+	}
+
+	/**
 	 * Set auto rotate
 	 */
 	public function setAutoRotate(bool $autoRotate): self
 	{
 		$this->options['auto_rotate'] = [$autoRotate];
 		return $this;
+	}
+
+	/**
+	 * Get auto rotate
+	 */
+	public function getAutoRotate(): ?bool
+	{
+		/** @var ?bool $value */
+		$value = $this->options['auto_rotate'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -268,12 +424,34 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get rotate
+	 */
+	public function getRotate(): ?int
+	{
+		/** @var ?int $value */
+		$value = $this->options['rotate'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set background
 	 */
 	public function setBackground(string $color): self
 	{
 		$this->options['background'] = [$color];
 		return $this;
+	}
+
+	/**
+	 * Get background
+	 */
+	public function getBackground(): ?string
+	{
+		/** @var ?string $value */
+		$value = $this->options['background'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -286,6 +464,17 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get blur
+	 */
+	public function getBlur(): ?float
+	{
+		/** @var ?float $value */
+		$value = $this->options['blur'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set sharpen
 	 */
 	public function setSharpen(float $sigma): self
@@ -295,12 +484,34 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get sharpen
+	 */
+	public function getSharpen(): ?float
+	{
+		/** @var ?float $value */
+		$value = $this->options['sharpen'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set pixelate
 	 */
 	public function setPixelate(int $size): self
 	{
 		$this->options['pixelate'] = [$size];
 		return $this;
+	}
+
+	/**
+	 * Get pixelate
+	 */
+	public function getPixelate(): ?int
+	{
+		/** @var ?int $value */
+		$value = $this->options['pixelate'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -335,12 +546,33 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get watermark
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getWatermark(): ?array
+	{
+		return $this->options['watermark'] ?? null;
+	}
+
+	/**
 	 * Set strip metadata
 	 */
 	public function setStripMetadata(bool $strip): self
 	{
 		$this->options['strip_metadata'] = [$strip];
 		return $this;
+	}
+
+	/**
+	 * Get strip metadata
+	 */
+	public function getStripMetadata(): ?bool
+	{
+		/** @var ?bool $value */
+		$value = $this->options['strip_metadata'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -353,12 +585,34 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get keep copyright
+	 */
+	public function getKeepCopyright(): ?bool
+	{
+		/** @var ?bool $value */
+		$value = $this->options['keep_copyright'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set strip color profile
 	 */
 	public function setStripColorProfile(bool $strip): self
 	{
 		$this->options['strip_color_profile'] = [$strip];
 		return $this;
+	}
+
+	/**
+	 * Get strip color profile
+	 */
+	public function getStripColorProfile(): ?bool
+	{
+		/** @var ?bool $value */
+		$value = $this->options['strip_color_profile'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -371,12 +625,33 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get quality
+	 */
+	public function getQuality(): ?int
+	{
+		/** @var ?int $value */
+		$value = $this->options['quality'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set format quality
 	 */
 	public function setFormatQuality(string $format, int $quality): self
 	{
 		$this->options['format_quality'] = [$format, $quality];
 		return $this;
+	}
+
+	/**
+	 * Get format quality
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getFormatQuality(): ?array
+	{
+		return $this->options['format_quality'] ?? null;
 	}
 
 	/**
@@ -389,12 +664,34 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get max bytes
+	 */
+	public function getMaxBytes(): ?int
+	{
+		/** @var ?int $value */
+		$value = $this->options['max_bytes'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set format
 	 */
 	public function setFormat(string $format): self
 	{
 		$this->options['format'] = [$format];
 		return $this;
+	}
+
+	/**
+	 * Get format
+	 */
+	public function getFormat(): ?string
+	{
+		/** @var ?string $value */
+		$value = $this->options['format'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -429,6 +726,16 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get resize
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getResize(): ?array
+	{
+		return $this->options['resize'] ?? null;
+	}
+
+	/**
 	 * Set size
 	 */
 	public function setSize(
@@ -459,12 +766,33 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get size
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getSize(): ?array
+	{
+		return $this->options['size'] ?? null;
+	}
+
+	/**
 	 * Set resizing algorithm
 	 */
 	public function setResizingAlgorithm(string $algorithm): self
 	{
 		$this->options['resizing_algorithm'] = [$algorithm];
 		return $this;
+	}
+
+	/**
+	 * Get resizing algorithm
+	 */
+	public function getResizingAlgorithm(): ?string
+	{
+		/** @var ?string $value */
+		$value = $this->options['resizing_algorithm'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -477,6 +805,17 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get enforce thumbnail
+	 */
+	public function getEnforceThumbnail(): ?bool
+	{
+		/** @var ?bool $value */
+		$value = $this->options['enforce_thumbnail'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set preset
 	 *
 	 * @param string|array<int, string> $presets
@@ -484,8 +823,20 @@ class Options implements \Stringable
 	public function setPreset($presets): self
 	{
 		$this->options['preset'] = is_array($presets) ? $presets : [$presets];
-
 		return $this;
+	}
+
+	/**
+	 * Get preset
+	 *
+	 * @return string|array<array-key, string>|null
+	 */
+	public function getPreset(): string|array|null
+	{
+		/** @var string|array<array-key, string>|null $value */
+		$value = $this->options['preset'] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -498,12 +849,34 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get cache buster
+	 */
+	public function getCacheBuster(): ?string
+	{
+		/** @var ?string $value */
+		$value = $this->options['cache_buster'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set filename
 	 */
 	public function setFilename(string $filename): self
 	{
 		$this->options['filename'] = [$filename];
 		return $this;
+	}
+
+	/**
+	 * Get filename
+	 */
+	public function getFilename(): ?string
+	{
+		/** @var ?string $value */
+		$value = $this->options['filename'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -516,12 +889,34 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get expires
+	 */
+	public function getExpires(): ?int
+	{
+		/** @var ?int $value */
+		$value = $this->options['expires'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set skip processing
 	 */
 	public function setSkipProcessing(bool $skip): self
 	{
 		$this->options['skip_processing'] = [$skip];
 		return $this;
+	}
+
+	/**
+	 * Get skip processing
+	 */
+	public function getSkipProcessing(): ?bool
+	{
+		/** @var ?bool $value */
+		$value = $this->options['skip_processing'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -534,6 +929,17 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get raw
+	 */
+	public function getRaw(): ?bool
+	{
+		/** @var ?bool $value */
+		$value = $this->options['raw'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set return attachment
 	 */
 	public function setReturnAttachment(bool $attachment): self
@@ -543,12 +949,34 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get return attachment
+	 */
+	public function getReturnAttachment(): ?bool
+	{
+		/** @var ?bool $value */
+		$value = $this->options['return_attachment'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set background alpha (Pro)
 	 */
 	public function setBackgroundAlpha(float $alpha): self
 	{
 		$this->options['background_alpha'] = [$alpha];
 		return $this;
+	}
+
+	/**
+	 * Get background alpha (Pro)
+	 */
+	public function getBackgroundAlpha(): ?float
+	{
+		/** @var ?float $value */
+		$value = $this->options['background_alpha'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -574,12 +1002,33 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get adjust (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getAdjust(): ?array
+	{
+		return $this->options['adjust'] ?? null;
+	}
+
+	/**
 	 * Set brightness (Pro)
 	 */
 	public function setBrightness(float $brightness): self
 	{
 		$this->options['brightness'] = [$brightness];
 		return $this;
+	}
+
+	/**
+	 * Get brightness (Pro)
+	 */
+	public function getBrightness(): ?float
+	{
+		/** @var ?float $value */
+		$value = $this->options['brightness'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -592,12 +1041,34 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get contrast (Pro)
+	 */
+	public function getContrast(): ?float
+	{
+		/** @var ?float $value */
+		$value = $this->options['contrast'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set saturation (Pro)
 	 */
 	public function setSaturation(float $saturation): self
 	{
 		$this->options['saturation'] = [$saturation];
 		return $this;
+	}
+
+	/**
+	 * Get saturation (Pro)
+	 */
+	public function getSaturation(): ?float
+	{
+		/** @var ?float $value */
+		$value = $this->options['saturation'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -610,12 +1081,35 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get monochrome (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getMonochrome(): ?array
+	{
+		/** @var ?array<array-key, mixed> $value */
+		$value = $this->options['monochrome'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set duotone (Pro)
 	 */
 	public function setDuotone(string $highlight, string $shadow): self
 	{
 		$this->options['duotone'] = [$highlight, $shadow];
 		return $this;
+	}
+
+	/**
+	 * Get duotone (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getDuotone(): ?array
+	{
+		return $this->options['duotone'] ?? null;
 	}
 
 	/**
@@ -637,6 +1131,16 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get unsharp masking (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getUnsharpMasking(): ?array
+	{
+		return $this->options['unsharp_masking'] ?? null;
+	}
+
+	/**
 	 * Set blur detections (Pro)
 	 */
 	public function setBlurDetections(string $type, ?float $sigma = null): self
@@ -648,6 +1152,16 @@ class Options implements \Stringable
 
 		$this->options['blur_detections'] = $values;
 		return $this;
+	}
+
+	/**
+	 * Get blur detections (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getBlurDetections(): ?array
+	{
+		return $this->options['blur_detections'] ?? null;
 	}
 
 	/**
@@ -666,6 +1180,16 @@ class Options implements \Stringable
 
 		$this->options['draw_detections'] = $values;
 		return $this;
+	}
+
+	/**
+	 * Get draw detections (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getDrawDetections(): ?array
+	{
+		return $this->options['draw_detections'] ?? null;
 	}
 
 	/**
@@ -691,6 +1215,16 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get objects position (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getObjectsPosition(): ?array
+	{
+		return $this->options['objects_position'] ?? null;
+	}
+
+	/**
 	 * Set colorize (Pro)
 	 */
 	public function setColorize(string $color, ?float $mix = null): self
@@ -702,6 +1236,16 @@ class Options implements \Stringable
 
 		$this->options['colorize'] = $values;
 		return $this;
+	}
+
+	/**
+	 * Get colorize (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getColorize(): ?array
+	{
+		return $this->options['colorize'] ?? null;
 	}
 
 	/**
@@ -723,12 +1267,33 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get gradient (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getGradient(): ?array
+	{
+		return $this->options['gradient'] ?? null;
+	}
+
+	/**
 	 * Set watermark URL (Pro)
 	 */
 	public function setWatermarkUrl(string $url): self
 	{
 		$this->options['watermark_url'] = [$url];
 		return $this;
+	}
+
+	/**
+	 * Get watermark URL (Pro)
+	 */
+	public function getWatermarkUrl(): ?string
+	{
+		/** @var ?string $value */
+		$value = $this->options['watermark_url'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -758,6 +1323,16 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get watermark text (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getWatermarkText(): ?array
+	{
+		return $this->options['watermark_text'] ?? null;
+	}
+
+	/**
 	 * Set watermark size (Pro)
 	 */
 	public function setWatermarkSize(string $size): self
@@ -767,12 +1342,34 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get watermark size (Pro)
+	 */
+	public function getWatermarkSize(): ?string
+	{
+		/** @var ?string $value */
+		$value = $this->options['watermark_size'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set watermark rotate (Pro)
 	 */
 	public function setWatermarkRotate(float $angle): self
 	{
 		$this->options['watermark_rotate'] = [$angle];
 		return $this;
+	}
+
+	/**
+	 * Get watermark rotate (Pro)
+	 */
+	public function getWatermarkRotate(): ?float
+	{
+		/** @var ?float $value */
+		$value = $this->options['watermark_rotate'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -798,6 +1395,16 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get watermark shadow (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getWatermarkShadow(): ?array
+	{
+		return $this->options['watermark_shadow'] ?? null;
+	}
+
+	/**
 	 * Set style (Pro)
 	 */
 	public function setStyle(string $style): self
@@ -807,12 +1414,34 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get style (Pro)
+	 */
+	public function getStyle(): ?string
+	{
+		/** @var ?string $value */
+		$value = $this->options['style'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set DPI (Pro)
 	 */
 	public function setDpi(int $dpi): self
 	{
 		$this->options['dpi'] = [$dpi];
 		return $this;
+	}
+
+	/**
+	 * Get DPI (Pro)
+	 */
+	public function getDpi(): ?int
+	{
+		/** @var ?int $value */
+		$value = $this->options['dpi'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -838,6 +1467,16 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get JPEG options (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getJpegOptions(): ?array
+	{
+		return $this->options['jpeg_options'] ?? null;
+	}
+
+	/**
 	 * Set PNG options (Pro)
 	 */
 	public function setPngOptions(?bool $interlaced = null, ?bool $quantize = null, ?int $quantizeColors = null): self
@@ -860,6 +1499,16 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get PNG options (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getPngOptions(): ?array
+	{
+		return $this->options['png_options'] ?? null;
+	}
+
+	/**
 	 * Set WebP options (Pro)
 	 */
 	public function setWebpOptions(?bool $lossless = null, ?int $nearLossless = null): self
@@ -875,6 +1524,16 @@ class Options implements \Stringable
 
 		$this->options['webp_options'] = $values;
 		return $this;
+	}
+
+	/**
+	 * Get WebP options (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getWebpOptions(): ?array
+	{
+		return $this->options['webp_options'] ?? null;
 	}
 
 	/**
@@ -904,12 +1563,33 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get autoquality (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getAutoquality(): ?array
+	{
+		return $this->options['autoquality'] ?? null;
+	}
+
+	/**
 	 * Set page (Pro)
 	 */
 	public function setPage(int $page): self
 	{
 		$this->options['page'] = [$page];
 		return $this;
+	}
+
+	/**
+	 * Get page (Pro)
+	 */
+	public function getPage(): ?int
+	{
+		/** @var ?int $value */
+		$value = $this->options['page'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -922,12 +1602,34 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get pages (Pro)
+	 */
+	public function getPages(): ?int
+	{
+		/** @var ?int $value */
+		$value = $this->options['pages'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set disable animation (Pro)
 	 */
 	public function setDisableAnimation(bool $disable): self
 	{
 		$this->options['disable_animation'] = [$disable];
 		return $this;
+	}
+
+	/**
+	 * Get disable animation (Pro)
+	 */
+	public function getDisableAnimation(): ?bool
+	{
+		/** @var ?bool $value */
+		$value = $this->options['disable_animation'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -940,12 +1642,34 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get video thumbnail second (Pro)
+	 */
+	public function getVideoThumbnailSecond(): ?float
+	{
+		/** @var ?float $value */
+		$value = $this->options['video_thumbnail_second'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set video thumbnail keyframes (Pro)
 	 */
 	public function setVideoThumbnailKeyframes(bool $value): self
 	{
 		$this->options['video_thumbnail_keyframes'] = [$value];
 		return $this;
+	}
+
+	/**
+	 * Get video thumbnail keyframes (Pro)
+	 */
+	public function getVideoThumbnailKeyframes(): ?bool
+	{
+		/** @var ?bool $value */
+		$value = $this->options['video_thumbnail_keyframes'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -967,6 +1691,16 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get video thumbnail tile (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getVideoThumbnailTile(): ?array
+	{
+		return $this->options['video_thumbnail_tile'] ?? null;
+	}
+
+	/**
 	 * Set video thumbnail animation (Pro)
 	 */
 	public function setVideoThumbnailAnimation(string $framesMix, ?int $fps = null, ?bool $reverse = null): self
@@ -985,12 +1719,33 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get video thumbnail animation (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getVideoThumbnailAnimation(): ?array
+	{
+		return $this->options['video_thumbnail_animation'] ?? null;
+	}
+
+	/**
 	 * Set fallback image URL (Pro)
 	 */
 	public function setFallbackImageUrl(string $url): self
 	{
 		$this->options['fallback_image_url'] = [$url];
 		return $this;
+	}
+
+	/**
+	 * Get fallback image URL (Pro)
+	 */
+	public function getFallbackImageUrl(): ?string
+	{
+		/** @var ?string $value */
+		$value = $this->options['fallback_image_url'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -1008,12 +1763,33 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get hashsum (Pro)
+	 *
+	 * @return array<array-key, mixed>|null
+	 */
+	public function getHashsum(): ?array
+	{
+		return $this->options['hashsum'] ?? null;
+	}
+
+	/**
 	 * Set max src resolution (Pro)
 	 */
 	public function setMaxSrcResolution(int $resolution): self
 	{
 		$this->options['max_src_resolution'] = [$resolution];
 		return $this;
+	}
+
+	/**
+	 * Get max src resolution (Pro)
+	 */
+	public function getMaxSrcResolution(): ?int
+	{
+		/** @var ?int $value */
+		$value = $this->options['max_src_resolution'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
@@ -1026,6 +1802,17 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get max src file size (Pro)
+	 */
+	public function getMaxSrcFileSize(): ?int
+	{
+		/** @var ?int $value */
+		$value = $this->options['max_src_file_size'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set max animation frames (Pro)
 	 */
 	public function setMaxAnimationFrames(int $frames): self
@@ -1035,12 +1822,34 @@ class Options implements \Stringable
 	}
 
 	/**
+	 * Get max animation frames (Pro)
+	 */
+	public function getMaxAnimationFrames(): ?int
+	{
+		/** @var ?int $value */
+		$value = $this->options['max_animation_frames'][0] ?? null;
+
+		return $value;
+	}
+
+	/**
 	 * Set max animation frame resolution (Pro)
 	 */
 	public function setMaxAnimationFrameResolution(int $resolution): self
 	{
 		$this->options['max_animation_frame_resolution'] = [$resolution];
 		return $this;
+	}
+
+	/**
+	 * Get max animation frame resolution (Pro)
+	 */
+	public function getMaxAnimationFrameResolution(): ?int
+	{
+		/** @var ?int $value */
+		$value = $this->options['max_animation_frame_resolution'][0] ?? null;
+
+		return $value;
 	}
 
 	/**
