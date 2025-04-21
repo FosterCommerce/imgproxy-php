@@ -14,18 +14,20 @@ class UrlBuilder
 	 * @param string|null $key Key for signing URLs
 	 * @param string|null $salt Salt for signing URLs
 	 * @param bool $encode Whether to base64 encode source URLs
+	 * @param string|null $customSignature Custom signature to use if key and salt are not provided
 	 */
 	public function __construct(
 		string $baseUrl,
 		protected ?string $key = null,
 		protected ?string $salt = null,
-		protected bool $encode = true
+		protected bool $encode = true,
+		protected ?string $customSignature = null,
 	) {
 		$this->baseUrl = rtrim($baseUrl, '/');
 	}
 
 	/**
-	 * Build URL for processing an image
+	 * Build the URL for processing an image
 	 *
 	 * @param string $sourceUrl The source image URL
 	 * @param Options|null $options Processing options
@@ -38,7 +40,7 @@ class UrlBuilder
 		$optionsString = (string) $options;
 
 		// Prepare path to be signed
-		$path = '/' . $optionsString;
+		$path = $optionsString === '' ? '' : '/' . $optionsString;
 
 		if ($this->encode) {
 			// Base64 encode the source URL
@@ -63,7 +65,7 @@ class UrlBuilder
 		}
 
 		// Generate signature if key and salt are provided
-		$signature = $this->key && $this->salt ? $this->generateSignature($path) : 'unsafe';
+		$signature = $this->key && $this->salt ? $this->generateSignature($path) : ($this->customSignature ?? 'unsafe');
 
 		return $this->baseUrl . '/' . $signature . $path;
 	}
