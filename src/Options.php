@@ -27,9 +27,11 @@ class Options implements \Stringable
 	public function __construct(array $options = [])
 	{
 		foreach ($options as $option => $value) {
-			$method = 'set' . ucfirst($option);
+			$method = 'set' . $this->toPascalCase($option);
 			if (method_exists($this, $method)) {
-				$this->{$method}($value);
+				// We want to make sure that we can set the individual arguments from an associative array or a regular array.
+				$args = is_array($value) ? $value : [$value];
+				$this->{$method}(...$args);
 			}
 		}
 	}
@@ -1874,5 +1876,10 @@ class Options implements \Stringable
 		}
 
 		return '';
+	}
+
+	private function toPascalCase(string $input): string
+	{
+		return ucfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $input))));
 	}
 }

@@ -35,13 +35,30 @@ echo $options;
 
 ### Alternative Initialization
 
+It is possible to initialize the Options object with an associative array. The keys of the array are the option names and the values are the option values.
+
+The values can either be a single value, an array of values, or an associative array of values.
+
+- When a single value is used, it is passed as the first argument to the setter method.
+- When an array of values is used, they are destructured as passed as arguments in order to the setter method.
+- When an associative array is used, the key/value pairs are destructured and passed in as named arguments to the setter method.
+
 ```php
 // Create Options object with array of values
 $options = new Options([
     'width' => 300,
     'height' => 400,
-    'resizingType' => 'fill',
+    'resize' => [
+        'width' => 300,
+        'height' => 400,
+        'enlarge' => false,
+        'resize_type' => 'fill',
+    ],
     'gravity' => 'sm',
+    'png_options' => [
+        'interlaced' => true,
+        'quantize' => false,
+    ],
 ]);
 ```
 
@@ -55,6 +72,13 @@ use fostercommerce\imgproxy\UrlBuilder;
 $options = new Options();
 $options->setPreset('sharp')
     ->setResize('fill', 300, 400, false)
+    // or
+    ->setResize([
+        'width' => 300,
+        'height' => 400,
+        'enlarge' => false,
+        'resize_type' => 'fill',
+    ])
     ->setGravity('sm')
     ->setQuality(80)
     ->setFormat('png');
