@@ -903,20 +903,24 @@ class Options implements \Stringable
 
 	/**
 	 * Set skip processing
+	 *
+	 * @param string|array<int, string> $extensions Format extensions to skip processing
 	 */
-	public function setSkipProcessing(bool $skip): self
+	public function setSkipProcessing($extensions): self
 	{
-		$this->options['skip_processing'] = [$skip];
+		$this->options['skip_processing'] = is_array($extensions) ? $extensions : [$extensions];
 		return $this;
 	}
 
 	/**
 	 * Get skip processing
+	 *
+	 * @return string|array<array-key, string>|null
 	 */
-	public function getSkipProcessing(): ?bool
+	public function getSkipProcessing(): string|array|null
 	{
-		/** @var ?bool $value */
-		$value = $this->options['skip_processing'][0] ?? null;
+		/** @var string|array<array-key, string>|null $value */
+		$value = $this->options['skip_processing'] ?? null;
 
 		return $value;
 	}
@@ -1076,9 +1080,14 @@ class Options implements \Stringable
 	/**
 	 * Set monochrome (Pro)
 	 */
-	public function setMonochrome(bool $monochrome): self
+	public function setMonochrome(float $intensity, ?string $color = null): self
 	{
-		$this->options['monochrome'] = [$monochrome];
+		$values = [$intensity];
+		if ($color !== null) {
+			$values[] = $color;
+		}
+
+		$this->options['monochrome'] = $values;
 		return $this;
 	}
 
@@ -1089,18 +1098,24 @@ class Options implements \Stringable
 	 */
 	public function getMonochrome(): ?array
 	{
-		/** @var ?array<array-key, mixed> $value */
-		$value = $this->options['monochrome'][0] ?? null;
-
-		return $value;
+		return $this->options['monochrome'] ?? null;
 	}
 
 	/**
 	 * Set duotone (Pro)
 	 */
-	public function setDuotone(string $highlight, string $shadow): self
+	public function setDuotone(float $intensity, ?string $color1 = null, ?string $color2 = null): self
 	{
-		$this->options['duotone'] = [$highlight, $shadow];
+		$values = [$intensity];
+		if ($color1 !== null) {
+			$values[] = $color1;
+		}
+
+		if ($color2 !== null) {
+			$values[] = $color2;
+		}
+
+		$this->options['duotone'] = $values;
 		return $this;
 	}
 
@@ -1229,11 +1244,15 @@ class Options implements \Stringable
 	/**
 	 * Set colorize (Pro)
 	 */
-	public function setColorize(string $color, ?float $mix = null): self
+	public function setColorize(float $opacity, ?string $color = null, ?bool $keepAlpha = null): self
 	{
-		$values = [$color];
-		if ($mix !== null) {
-			$values[] = $mix;
+		$values = [$opacity];
+		if ($color !== null) {
+			$values[] = $color;
+		}
+
+		if ($keepAlpha !== null) {
+			$values[] = $keepAlpha;
 		}
 
 		$this->options['colorize'] = $values;
@@ -1253,15 +1272,23 @@ class Options implements \Stringable
 	/**
 	 * Set gradient (Pro)
 	 */
-	public function setGradient(string $colors, ?string $direction = null, ?string $opacity = null): self
+	public function setGradient(float $opacity, ?string $color = null, ?string $direction = null, ?float $start = null, ?float $stop = null): self
 	{
-		$values = [$colors];
+		$values = [$opacity];
+		if ($color !== null) {
+			$values[] = $color;
+		}
+
 		if ($direction !== null) {
 			$values[] = $direction;
 		}
 
-		if ($opacity !== null) {
-			$values[] = $opacity;
+		if ($start !== null) {
+			$values[] = $start;
+		}
+
+		if ($stop !== null) {
+			$values[] = $stop;
 		}
 
 		$this->options['gradient'] = $values;
@@ -1345,19 +1372,21 @@ class Options implements \Stringable
 	/**
 	 * Set watermark size (Pro)
 	 */
-	public function setWatermarkSize(string $size): self
+	public function setWatermarkSize(int $width, int $height): self
 	{
-		$this->options['watermark_size'] = [$size];
+		$this->options['watermark_size'] = [$width, $height];
 		return $this;
 	}
 
 	/**
 	 * Get watermark size (Pro)
+	 *
+	 * @return ?int[]
 	 */
-	public function getWatermarkSize(): ?string
+	public function getWatermarkSize(): ?array
 	{
-		/** @var ?string $value */
-		$value = $this->options['watermark_size'][0] ?? null;
+		/** @var ?int[] $value */
+		$value = $this->options['watermark_size'] ?? null;
 
 		return $value;
 	}
@@ -1457,8 +1486,14 @@ class Options implements \Stringable
 	/**
 	 * Set JPEG options (Pro)
 	 */
-	public function setJpegOptions(?bool $progressive = null, ?bool $noSubsample = null, ?string $tubingMode = null): self
-	{
+	public function setJpegOptions(
+		?bool $progressive = null,
+		?bool $noSubsample = null,
+		?bool $trellisQuant = null,
+		?bool $overshootDeringing = null,
+		?bool $optimizeScans = null,
+		?int $quantTable = null
+	): self {
 		$values = [];
 		if ($progressive !== null) {
 			$values[] = $progressive;
@@ -1468,8 +1503,20 @@ class Options implements \Stringable
 			$values[] = $noSubsample;
 		}
 
-		if ($tubingMode !== null) {
-			$values[] = $tubingMode;
+		if ($trellisQuant !== null) {
+			$values[] = $trellisQuant;
+		}
+
+		if ($overshootDeringing !== null) {
+			$values[] = $overshootDeringing;
+		}
+
+		if ($optimizeScans !== null) {
+			$values[] = $optimizeScans;
+		}
+
+		if ($quantTable !== null) {
+			$values[] = $quantTable;
 		}
 
 		$this->options['jpeg_options'] = $values;
@@ -1521,15 +1568,15 @@ class Options implements \Stringable
 	/**
 	 * Set WebP options (Pro)
 	 */
-	public function setWebpOptions(?bool $lossless = null, ?int $nearLossless = null): self
+	public function setWebpOptions(?string $compression = null, ?bool $smartSubsample = null): self
 	{
 		$values = [];
-		if ($lossless !== null) {
-			$values[] = $lossless;
+		if ($compression !== null) {
+			$values[] = $compression;
 		}
 
-		if ($nearLossless !== null) {
-			$values[] = $nearLossless;
+		if ($smartSubsample !== null) {
+			$values[] = $smartSubsample;
 		}
 
 		$this->options['webp_options'] = $values;
@@ -1685,15 +1732,53 @@ class Options implements \Stringable
 	/**
 	 * Set video thumbnail tile (Pro)
 	 */
-	public function setVideoThumbnailTile(string $tile, ?string $columns = null, ?string $rows = null): self
-	{
-		$values = [$tile];
+	public function setVideoThumbnailTile(
+		float $step,
+		?int $columns = null,
+		?int $rows = null,
+		?int $tileWidth = null,
+		?int $tileHeight = null,
+		?bool $extendTile = null,
+		?bool $trim = null,
+		?bool $fill = null,
+		?float $focusX = null,
+		?float $focusY = null
+	): self {
+		$values = [$step];
 		if ($columns !== null) {
 			$values[] = $columns;
 		}
 
 		if ($rows !== null) {
 			$values[] = $rows;
+		}
+
+		if ($tileWidth !== null) {
+			$values[] = $tileWidth;
+		}
+
+		if ($tileHeight !== null) {
+			$values[] = $tileHeight;
+		}
+
+		if ($extendTile !== null) {
+			$values[] = $extendTile;
+		}
+
+		if ($trim !== null) {
+			$values[] = $trim;
+		}
+
+		if ($fill !== null) {
+			$values[] = $fill;
+		}
+
+		if ($focusX !== null) {
+			$values[] = $focusX;
+		}
+
+		if ($focusY !== null) {
+			$values[] = $focusY;
 		}
 
 		$this->options['video_thumbnail_tile'] = $values;
@@ -1713,15 +1798,53 @@ class Options implements \Stringable
 	/**
 	 * Set video thumbnail animation (Pro)
 	 */
-	public function setVideoThumbnailAnimation(string $framesMix, ?int $fps = null, ?bool $reverse = null): self
-	{
-		$values = [$framesMix];
-		if ($fps !== null) {
-			$values[] = $fps;
+	public function setVideoThumbnailAnimation(
+		float $step,
+		?int $delay = null,
+		?int $frames = null,
+		?int $frameWidth = null,
+		?int $frameHeight = null,
+		?bool $extendFrame = null,
+		?bool $trim = null,
+		?bool $fill = null,
+		?float $focusX = null,
+		?float $focusY = null
+	): self {
+		$values = [$step];
+		if ($delay !== null) {
+			$values[] = $delay;
 		}
 
-		if ($reverse !== null) {
-			$values[] = $reverse;
+		if ($frames !== null) {
+			$values[] = $frames;
+		}
+
+		if ($frameWidth !== null) {
+			$values[] = $frameWidth;
+		}
+
+		if ($frameHeight !== null) {
+			$values[] = $frameHeight;
+		}
+
+		if ($extendFrame !== null) {
+			$values[] = $extendFrame;
+		}
+
+		if ($trim !== null) {
+			$values[] = $trim;
+		}
+
+		if ($fill !== null) {
+			$values[] = $fill;
+		}
+
+		if ($focusX !== null) {
+			$values[] = $focusX;
+		}
+
+		if ($focusY !== null) {
+			$values[] = $focusY;
 		}
 
 		$this->options['video_thumbnail_animation'] = $values;
