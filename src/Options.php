@@ -866,7 +866,7 @@ class Options implements \Stringable
 	 */
 	public function setFilename(string $filename): self
 	{
-		$this->options['filename'] = [$filename];
+		$this->options['filename'] = [base64_encode($filename), true];
 		return $this;
 	}
 
@@ -878,7 +878,7 @@ class Options implements \Stringable
 		/** @var ?string $value */
 		$value = $this->options['filename'][0] ?? null;
 
-		return $value;
+		return $value !== null ? (base64_decode($value, true) ?: null) : null;
 	}
 
 	/**
@@ -1283,7 +1283,7 @@ class Options implements \Stringable
 	 */
 	public function setWatermarkUrl(string $url): self
 	{
-		$this->options['watermark_url'] = [$url];
+		$this->options['watermark_url'] = [base64_encode($url)];
 		return $this;
 	}
 
@@ -1295,7 +1295,7 @@ class Options implements \Stringable
 		/** @var ?string $value */
 		$value = $this->options['watermark_url'][0] ?? null;
 
-		return $value;
+		return $value !== null ? (base64_decode($value, true) ?: null) : null;
 	}
 
 	/**
@@ -1303,7 +1303,7 @@ class Options implements \Stringable
 	 */
 	public function setWatermarkText(string $text, ?string $font = null, ?float $fontSize = null, ?string $color = null, ?bool $wrap = null): self
 	{
-		$values = [$text];
+		$values = [base64_encode($text)];
 		if ($font !== null) {
 			$values[] = $font;
 		}
@@ -1331,7 +1331,15 @@ class Options implements \Stringable
 	 */
 	public function getWatermarkText(): ?array
 	{
-		return $this->options['watermark_text'] ?? null;
+		$options = $this->options['watermark_text'] ?? null;
+
+		if ($options !== null && isset($options[0])) {
+			/** @var string $value */
+			$value = $options[0];
+			$options[0] = (base64_decode($value, true) ?: null);
+		}
+
+		return $options;
 	}
 
 	/**
@@ -1411,7 +1419,7 @@ class Options implements \Stringable
 	 */
 	public function setStyle(string $style): self
 	{
-		$this->options['style'] = [$style];
+		$this->options['style'] = [base64_encode($style)];
 		return $this;
 	}
 
@@ -1423,7 +1431,7 @@ class Options implements \Stringable
 		/** @var ?string $value */
 		$value = $this->options['style'][0] ?? null;
 
-		return $value;
+		return $value !== null ? (base64_decode($value, true) ?: null) : null;
 	}
 
 	/**
@@ -1735,7 +1743,7 @@ class Options implements \Stringable
 	 */
 	public function setFallbackImageUrl(string $url): self
 	{
-		$this->options['fallback_image_url'] = [$url];
+		$this->options['fallback_image_url'] = [base64_encode($url)];
 		return $this;
 	}
 
@@ -1747,7 +1755,7 @@ class Options implements \Stringable
 		/** @var ?string $value */
 		$value = $this->options['fallback_image_url'][0] ?? null;
 
-		return $value;
+		return $value !== null ? (base64_decode($value, true) ?: null) : null;
 	}
 
 	/**
