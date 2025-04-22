@@ -2,7 +2,7 @@
 	"name": "fostercommerce/imgproxy",
 	"description": "A PHP library for generating imgproxy URLs with processing options.",
 	"type": "library",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"keywords": [
 		"imgproxy",
 		"php",
