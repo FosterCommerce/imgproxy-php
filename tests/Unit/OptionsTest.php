@@ -97,3 +97,23 @@ test('options requiring base64 encoding are properly encoded', function (): void
 	expect($options->toString())->toContain("filename:{$encodedFilename}:1");
 	expect($options->getFilename())->toBe($filename);
 });
+
+test('setFilename encodes and decodes correctly with encode=true', function (): void {
+	$options = createOptions();
+	$filename = 'test image @ 2024.png';
+	$options->setFilename($filename, true);
+
+	$encoded = base64_encode($filename);
+	expect($options->toString())->toContain("filename:{$encoded}:1");
+	expect($options->getFilename())->toBe($filename);
+});
+
+test('setFilename stores and decodes correctly with encode=false', function (): void {
+	$options = createOptions();
+	$filename = 'test image @ 2024.png';
+	$options->setFilename($filename, false);
+
+	$urlEncoded = urlencode($filename);
+	expect($options->toString())->toContain("filename:{$urlEncoded}:0");
+	expect($options->getFilename())->toBe($filename);
+});
