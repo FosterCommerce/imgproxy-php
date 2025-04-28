@@ -863,10 +863,15 @@ class Options implements \Stringable
 
 	/**
 	 * Set filename
+	 *
+	 * @param bool $encode Whether to base64 encode the filename. If true, the filename is base64 encoded. Otherwise, the filename is url-encoded.
+	 *
+	 * Note: This diverges from the imgproxy arguments.
 	 */
-	public function setFilename(string $filename): self
+	public function setFilename(string $filename, bool $encode = true): self
 	{
-		$this->options['filename'] = [base64_encode($filename), true];
+		$this->options['filename'] = $encode ? [base64_encode($filename), true] : [urlencode($filename), false];
+
 		return $this;
 	}
 
@@ -877,8 +882,17 @@ class Options implements \Stringable
 	{
 		/** @var ?string $value */
 		$value = $this->options['filename'][0] ?? null;
+		$encoded = $this->options['filename'][1] ?? null;
 
-		return $value !== null ? (base64_decode($value, true) ?: null) : null;
+		if ($value === null) {
+			return null;
+		}
+
+		if ($encoded === true) {
+			return base64_decode($value, true) ?: null;
+		}
+
+		return urldecode($value);
 	}
 
 	/**
