@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This package is no longer actively maintained. The Foster Commerce team has transitioned our projects over to [Small Pics](https://www.smallpics.io) using their official [PHP client](https://github.com/SmallPics/smallpics-php).
+
 # imgproxy-php
 
 A PHP library for working with imgproxy. This package provides a simple way to build URLs with imgproxy processing options.
